@@ -389,19 +389,21 @@ export function VisitSection({ c }: { c: Copy }) {
   );
 }
 
-// Resting spots for the donut rain: shape, left %, bottom offset, tilt, glaze, size, delay.
+// Resting spots for the donut rain. Donuts live in the side gutters only, so
+// they never sit behind the footer text. x = desktop left %, xm = narrow-screen
+// left % (hugging the edges), desk = hidden on narrow screens.
 const RAIN = [
-  { k: "square", x: 4, y: 2, r: -18, g: "pink", s: 64, d: 0 },
-  { k: "filled", x: 14, y: 30, r: 0, g: "ube", s: 54, d: 120 },
-  { k: "round", x: 24, y: 6, r: 28, g: "choc", s: 72, d: 260 },
-  { k: "square", x: 36, y: 44, r: -8, g: "mango", s: 46, d: 60 },
-  { k: "round", x: 60, y: 40, r: 20, g: "pink", s: 52, d: 320 },
-  { k: "filled", x: 70, y: 4, r: 0, g: "pink", s: 66, d: 180 },
-  { k: "square", x: 81, y: 28, r: 10, g: "ube", s: 58, d: 20 },
-  { k: "round", x: 90, y: 2, r: -12, g: "mango", s: 66, d: 240 },
-  { k: "filled", x: 48, y: 1, r: 0, g: "mango", s: 50, d: 400 },
-  { k: "square", x: 95, y: 52, r: -30, g: "choc", s: 42, d: 460 },
-  { k: "round", x: 8, y: 58, r: 14, g: "ube", s: 40, d: 520 },
+  { k: "square", x: 2, xm: -4, y: 4, r: -18, g: "pink", s: 64, d: 0 },
+  { k: "filled", x: 12, xm: -2, y: 36, r: 0, g: "ube", s: 54, d: 120 },
+  { k: "round", x: 5, xm: -5, y: 64, r: 28, g: "choc", s: 60, d: 260 },
+  { k: "square", x: 16, xm: 0, y: 12, r: -8, g: "mango", s: 46, d: 60, desk: true },
+  { k: "filled", x: 3, xm: -3, y: 86, r: 0, g: "mango", s: 50, d: 400 },
+  { k: "round", x: 18, xm: 0, y: 78, r: 14, g: "ube", s: 40, d: 520, desk: true },
+  { k: "round", x: 84, xm: 90, y: 40, r: 20, g: "pink", s: 52, d: 320 },
+  { k: "filled", x: 90, xm: 91, y: 6, r: 0, g: "pink", s: 64, d: 180 },
+  { k: "square", x: 94, xm: 93, y: 64, r: 10, g: "ube", s: 50, d: 20 },
+  { k: "round", x: 80, xm: 88, y: 14, r: -12, g: "mango", s: 58, d: 240, desk: true },
+  { k: "square", x: 95, xm: 92, y: 88, r: -30, g: "choc", s: 42, d: 460 },
 ];
 
 export function Footer({ c }: { c: Copy }) {
@@ -410,11 +412,12 @@ export function Footer({ c }: { c: Copy }) {
       <div aria-hidden="true" className="db-rain">
         {RAIN.map((d, i) => (
           <span
-            className={`db-rain__donut db-rain__donut--${d.k} db-rain__donut--${d.g}`}
+            className={`db-rain__donut db-rain__donut--${d.k} db-rain__donut--${d.g}${d.desk ? " db-rain__donut--desk" : ""}`}
             key={i}
             style={
               {
                 "--x": `${d.x}%`,
+                "--xm": `${d.xm}%`,
                 "--y": `${d.y}%`,
                 "--r": `${d.r}deg`,
                 "--s": `${d.s}px`,
