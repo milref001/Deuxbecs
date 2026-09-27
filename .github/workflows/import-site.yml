@@ -1,0 +1,31 @@
+name: Import site from Higgsfield
+
+on:
+  push:
+    branches: [main]
+    paths: [".github/import-site.txt"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and unpack site export
+        run: |
+          URL=$(head -n1 .github/import-site.txt | tr -d '[:space:]')
+          curl -fsSL "$URL" -o /tmp/site.zip
+          rm -rf site
+          mkdir site
+          unzip -q /tmp/site.zip -d site
+          echo "Files imported: $(find site -type f | wc -l)"
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+          git add -A site
+          git commit -m "Import Deux Becs site from Higgsfield ($(date -u +%Y-%m-%d))" || echo "No changes"
+          git push
