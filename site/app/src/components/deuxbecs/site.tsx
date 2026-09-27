@@ -37,6 +37,13 @@ export function useDeuxBecsFx(rootRef: React.RefObject<HTMLElement | null>) {
             track.style.transform = `translate3d(${-p * Math.max(0, dist)}px,0,0)`;
           }
           el.style.setProperty("--p", p.toFixed(4));
+        } else if (kind === "end") {
+          // Page-end progress: 0 when the element starts entering, 1 at the
+          // very bottom of the page (the footer never scrolls past the top).
+          const remaining = document.documentElement.scrollHeight - (window.scrollY + vh);
+          const span = Math.max(1, Math.min(r.height, vh));
+          const p = Math.min(1, Math.max(0, 1 - remaining / span));
+          el.style.setProperty("--p", p.toFixed(4));
         } else {
           // Visibility progress: 0 entering from bottom, 1 leaving top.
           const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));
@@ -66,6 +73,20 @@ export function useDeuxBecsFx(rootRef: React.RefObject<HTMLElement | null>) {
       }
     };
 
+    // Donut rain: fire once when the footer comes into view.
+    const rainObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("db-rain--go");
+            rainObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.25 },
+    );
+    root.querySelectorAll("[data-rain]").forEach((el) => rainObserver.observe(el));
+
     tick();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
@@ -73,6 +94,7 @@ export function useDeuxBecsFx(rootRef: React.RefObject<HTMLElement | null>) {
     root.addEventListener("pointerout", onLeave);
     return () => {
       if (raf) cancelAnimationFrame(raf);
+      rainObserver.disconnect();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
       root.removeEventListener("pointermove", onMove);
@@ -367,12 +389,47 @@ export function VisitSection({ c }: { c: Copy }) {
   );
 }
 
+// Resting spots for the donut rain: left %, bottom offset, tilt, glaze, size, delay.
+const RAIN = [
+  { x: 4, y: 2, r: -18, g: "pink", s: 64, d: 0 },
+  { x: 14, y: 30, r: 12, g: "mango", s: 52, d: 120 },
+  { x: 24, y: 6, r: 28, g: "choc", s: 72, d: 260 },
+  { x: 36, y: 44, r: -8, g: "ube", s: 46, d: 60 },
+  { x: 60, y: 40, r: 20, g: "mango", s: 50, d: 320 },
+  { x: 70, y: 4, r: -24, g: "pink", s: 70, d: 180 },
+  { x: 81, y: 28, r: 10, g: "ube", s: 58, d: 20 },
+  { x: 90, y: 2, r: -12, g: "choc", s: 66, d: 240 },
+  { x: 48, y: 1, r: 36, g: "pink", s: 48, d: 400 },
+  { x: 95, y: 52, r: -30, g: "mango", s: 42, d: 460 },
+];
+
 export function Footer({ c }: { c: Copy }) {
   return (
-    <footer className="db-foot">
+    <footer className="db-foot" data-fx="end" data-rain="">
+      <div aria-hidden="true" className="db-rain">
+        {RAIN.map((d, i) => (
+          <span
+            className={`db-rain__donut db-rain__donut--${d.g}`}
+            key={i}
+            style={
+              {
+                "--x": `${d.x}%`,
+                "--y": `${d.y}%`,
+                "--r": `${d.r}deg`,
+                "--s": `${d.s}px`,
+                "--d": `${d.d}ms`,
+              } as React.CSSProperties
+            }
+          />
+        ))}
+      </div>
       <img alt="Deux Becs" className="db-foot__logo" loading="lazy" src={`${A}/brand/logo.png`} />
       <p className="db-foot__line">{c.footer.line}</p>
       <FooterInstagram label={c.footer.follow} />
+      <div aria-hidden="true" className="db-roll db-roll--foot">
+        <img alt="" className="db-roll__board" src={`${A}/icons/skate.png`} />
+        <span className="db-roll__line" />
+      </div>
       <p className="db-foot__small">© {new Date().getFullYear()} Deux Becs, {c.footer.tag}</p>
     </footer>
   );
