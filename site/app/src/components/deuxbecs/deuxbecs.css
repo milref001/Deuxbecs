@@ -678,12 +678,13 @@
 /* Kickflip: pop, flip along the board's long axis, land, roll on. */
 .db-fx .db-roll--foot .db-roll__board { animation: db-kickflip 2.6s cubic-bezier(0.3, 0.7, 0.4, 1) infinite; }
 @keyframes db-kickflip {
-  0%, 55%, 100% { transform: translateY(0) rotateX(0) rotate(0); }
+  0%, 55% { transform: translateY(0) rotateX(0) rotate(0); }
   62% { transform: translateY(-10px) rotateX(0) rotate(-14deg); }
   72% { transform: translateY(-46px) rotateX(200deg) rotate(-4deg); }
   82% { transform: translateY(-30px) rotateX(360deg) rotate(4deg); }
   90% { transform: translateY(0) rotateX(360deg) rotate(0); }
   94% { transform: translateY(-5px) rotateX(360deg) rotate(0); }
+  100% { transform: translateY(0) rotateX(360deg) rotate(0); }
 }
 
 /* Donut shapes */
