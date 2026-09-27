@@ -61,6 +61,8 @@
   text-transform: uppercase;
   line-height: 0.9;
   font-size: clamp(3rem, 7.5vw, 7.5rem);
+  letter-spacing: 0.01em;
+  word-spacing: 0.06em;
   text-shadow: 4px 4px 0 var(--db-navy);
 }
 .db-root .scroll-scrub__kicker {
