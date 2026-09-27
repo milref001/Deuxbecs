@@ -657,16 +657,80 @@
   78% { transform: translateY(-14px) rotate(calc(var(--r) + 6deg)); }
   100% { transform: translateY(0) rotate(var(--r)); }
 }
-.db-roll--foot { width: 100%; height: 80px; margin: 0.5rem 0 0; }
+.db-roll--foot { width: 100%; height: 110px; margin: 0.5rem 0 0; }
 .db-roll--foot .db-roll__line { border-bottom-color: rgba(31, 32, 96, 0.35); }
-.db-roll--foot .db-roll__board {
-  filter: none;
+.db-roll__rider {
+  position: absolute;
+  bottom: 10px;
+  left: calc(var(--p, 0) * (100% - 90px));
   width: 90px;
   height: 90px;
-  left: calc(var(--p, 0) * (100% - 90px));
-  transform: rotate(calc(var(--p, 0) * 10deg - 5deg));
+  perspective: 420px;
 }
+.db-roll--foot .db-roll__board {
+  position: static;
+  width: 100%;
+  height: 100%;
+  filter: none;
+  transform: none;
+  transform-origin: 50% 60%;
+}
+/* Kickflip: pop, flip along the board's long axis, land, roll on. */
+.db-fx .db-roll--foot .db-roll__board { animation: db-kickflip 2.6s cubic-bezier(0.3, 0.7, 0.4, 1) infinite; }
+@keyframes db-kickflip {
+  0%, 55%, 100% { transform: translateY(0) rotateX(0) rotate(0); }
+  62% { transform: translateY(-10px) rotateX(0) rotate(-14deg); }
+  72% { transform: translateY(-46px) rotateX(200deg) rotate(-4deg); }
+  82% { transform: translateY(-30px) rotateX(360deg) rotate(4deg); }
+  90% { transform: translateY(0) rotateX(360deg) rotate(0); }
+  94% { transform: translateY(-5px) rotateX(360deg) rotate(0); }
+}
+
+/* Donut shapes */
+.db-rain__donut--round { border-radius: 50%; }
+.db-rain__donut--filled {
+  border-radius: 50%;
+  -webkit-mask: none;
+  mask: none;
+  background:
+    radial-gradient(circle at 30% 35%, rgba(255, 255, 255, 0.9) 0 2px, transparent 3px),
+    radial-gradient(circle at 62% 28%, rgba(255, 255, 255, 0.9) 0 2px, transparent 3px),
+    radial-gradient(circle at 70% 66%, rgba(255, 255, 255, 0.9) 0 2px, transparent 3px),
+    radial-gradient(circle at 38% 72%, rgba(255, 255, 255, 0.9) 0 2px, transparent 3px),
+    radial-gradient(circle at 52% 52%, rgba(255, 255, 255, 0.8) 0 1.5px, transparent 2.5px),
+    #e0a25c;
+}
+/* Cream dot piped on top of the filled ones, in the glaze colour */
+.db-rain__donut--filled::after {
+  content: "";
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  width: 34%;
+  height: 26%;
+  border-radius: 50% 50% 45% 45%;
+  background: var(--glaze);
+  border: 2px solid var(--db-navy);
+  transform: translateX(-50%);
+}
+
+/* Keep bouncing after landing (each donut on its own rhythm) */
+.db-fx .db-rain--go .db-rain__donut {
+  animation:
+    db-fall 1.3s cubic-bezier(0.25, 1.35, 0.45, 1) var(--d) both,
+    db-hop 1.6s ease-in-out calc(var(--d) + 1.3s) infinite;
+}
+.db-fx .db-rain--go .db-rain__donut:nth-child(3n) { animation-duration: 1.3s, 1.9s; }
+.db-fx .db-rain--go .db-rain__donut:nth-child(3n + 1) { animation-duration: 1.3s, 1.35s; }
+@keyframes db-hop {
+  0%, 100% { transform: translateY(0) rotate(var(--r)) scale(1, 1); }
+  12% { transform: translateY(0) rotate(var(--r)) scale(1.1, 0.88); }
+  45% { transform: translateY(-38px) rotate(calc(var(--r) + 14deg)) scale(0.96, 1.05); }
+  78% { transform: translateY(0) rotate(var(--r)) scale(1, 1); }
+  86% { transform: translateY(0) rotate(var(--r)) scale(1.08, 0.9); }
+}
+
 @media (max-width: 900px) {
   .db-rain__donut { width: calc(var(--s) * 0.7); height: calc(var(--s) * 0.7); }
-  .db-roll--foot .db-roll__board { width: 70px; height: 70px; left: calc(var(--p, 0) * (100% - 70px)); }
+  .db-roll__rider { width: 70px; height: 70px; left: calc(var(--p, 0) * (100% - 70px)); }
 }

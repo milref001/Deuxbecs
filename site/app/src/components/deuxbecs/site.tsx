@@ -389,18 +389,19 @@ export function VisitSection({ c }: { c: Copy }) {
   );
 }
 
-// Resting spots for the donut rain: left %, bottom offset, tilt, glaze, size, delay.
+// Resting spots for the donut rain: shape, left %, bottom offset, tilt, glaze, size, delay.
 const RAIN = [
-  { x: 4, y: 2, r: -18, g: "pink", s: 64, d: 0 },
-  { x: 14, y: 30, r: 12, g: "mango", s: 52, d: 120 },
-  { x: 24, y: 6, r: 28, g: "choc", s: 72, d: 260 },
-  { x: 36, y: 44, r: -8, g: "ube", s: 46, d: 60 },
-  { x: 60, y: 40, r: 20, g: "mango", s: 50, d: 320 },
-  { x: 70, y: 4, r: -24, g: "pink", s: 70, d: 180 },
-  { x: 81, y: 28, r: 10, g: "ube", s: 58, d: 20 },
-  { x: 90, y: 2, r: -12, g: "choc", s: 66, d: 240 },
-  { x: 48, y: 1, r: 36, g: "pink", s: 48, d: 400 },
-  { x: 95, y: 52, r: -30, g: "mango", s: 42, d: 460 },
+  { k: "square", x: 4, y: 2, r: -18, g: "pink", s: 64, d: 0 },
+  { k: "filled", x: 14, y: 30, r: 0, g: "ube", s: 54, d: 120 },
+  { k: "round", x: 24, y: 6, r: 28, g: "choc", s: 72, d: 260 },
+  { k: "square", x: 36, y: 44, r: -8, g: "mango", s: 46, d: 60 },
+  { k: "round", x: 60, y: 40, r: 20, g: "pink", s: 52, d: 320 },
+  { k: "filled", x: 70, y: 4, r: 0, g: "pink", s: 66, d: 180 },
+  { k: "square", x: 81, y: 28, r: 10, g: "ube", s: 58, d: 20 },
+  { k: "round", x: 90, y: 2, r: -12, g: "mango", s: 66, d: 240 },
+  { k: "filled", x: 48, y: 1, r: 0, g: "mango", s: 50, d: 400 },
+  { k: "square", x: 95, y: 52, r: -30, g: "choc", s: 42, d: 460 },
+  { k: "round", x: 8, y: 58, r: 14, g: "ube", s: 40, d: 520 },
 ];
 
 export function Footer({ c }: { c: Copy }) {
@@ -409,7 +410,7 @@ export function Footer({ c }: { c: Copy }) {
       <div aria-hidden="true" className="db-rain">
         {RAIN.map((d, i) => (
           <span
-            className={`db-rain__donut db-rain__donut--${d.g}`}
+            className={`db-rain__donut db-rain__donut--${d.k} db-rain__donut--${d.g}`}
             key={i}
             style={
               {
@@ -427,7 +428,9 @@ export function Footer({ c }: { c: Copy }) {
       <p className="db-foot__line">{c.footer.line}</p>
       <FooterInstagram label={c.footer.follow} />
       <div aria-hidden="true" className="db-roll db-roll--foot">
-        <img alt="" className="db-roll__board" src={`${A}/icons/skate.png`} />
+        <span className="db-roll__rider">
+          <img alt="" className="db-roll__board" src={`${A}/icons/skate.png`} />
+        </span>
         <span className="db-roll__line" />
       </div>
       <p className="db-foot__small">© {new Date().getFullYear()} Deux Becs, {c.footer.tag}</p>
