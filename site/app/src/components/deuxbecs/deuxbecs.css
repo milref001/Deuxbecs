@@ -662,7 +662,7 @@
 .db-roll__rider {
   position: absolute;
   bottom: 10px;
-  left: calc(var(--p, 0) * (100% - 90px));
+  left: calc(var(--p, 0) * (50% - 45px));
   width: 90px;
   height: 90px;
   perspective: 420px;
@@ -732,5 +732,5 @@
 
 @media (max-width: 900px) {
   .db-rain__donut { width: calc(var(--s) * 0.7); height: calc(var(--s) * 0.7); }
-  .db-roll__rider { width: 70px; height: 70px; left: calc(var(--p, 0) * (100% - 70px)); }
+  .db-roll__rider { width: 70px; height: 70px; left: calc(var(--p, 0) * (50% - 35px)); }
 }
